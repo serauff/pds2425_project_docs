@@ -70,6 +70,23 @@ For example:
 .. _Generating QA Dataset
 Generating Question&Answer Dataset
 ------------
+
+After generating full-text questions, we can use the :py:func:`data_gen.generate_answers` function for generating the full question & answer dataset. 
+
+.. autofunction:: data_gen.generate_answers(df_qa, answer_row, question_row, type_row, chat, plan)
+
+The ``df_qa`` parameter should be a dataframe containing a column ``answer_row`` with answers options to given questions from a ``question_row``, as well as a ``type_row`` 
+which indicates different handling (such as answers with multiple answer options, single answer options or answers with special characters).
+Further, the ``chat`` parameter expects a chat object that has been initialised with fitting context. The ``plan`` parameter can be used to set the generation to the "paid" tier
+through the :py:func:`data_gen.generate_with_msg` function.
+
+For example:
+
+>>> chat = reset_context()
+>>> context = "Your role is a business representative that gets interviewed and is being asked to provide information about different topics"
+>>> chat = init_context(context)
+>>> df_qa = generate_answers(df_wit_questions, 'column_with_answers', 'column_with_questions, 'type_column', chat)
+
 .. _Dataset Annotation
 Dataset Annotation
 ------------
