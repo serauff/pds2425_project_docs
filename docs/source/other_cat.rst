@@ -53,8 +53,22 @@ For example:
 .. _Generating Question Datset:
 Generating Question Dataset
 ------------
+
+To generate the questions dataset, the :py:func:`data_gen.generate_q_dataset` function can be used
+
+.. autofunction:: data_gen.generate_q_dataset(question_row, chat)
+
+While the basic instruction for generating the questions is hardcoded, the questions that are handed over to :py:func:`data_gen.generate_with_msg` are retrieved from the
+dataframe column over the parameter ``question_row`` which can be a string such as ``questions``, is used to format the instruction string for each question that should be generated.
+
+For example:
+
+>>> model = genai.GenerativeModel("gemini-1.5-flash")
+>>> chat = init_context("You are a helpful assistant in generating questionnaire data. Please provide answers to the following questions.")
+>>> questions = generate_q_dataset('question', chat)
+
 .. _Generating QA Dataset
-Generating Question Dataset
+Generating Question&Answer Dataset
 ------------
 .. _Dataset Annotation
 Dataset Annotation
