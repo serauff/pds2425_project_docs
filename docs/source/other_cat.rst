@@ -87,6 +87,30 @@ For example:
 >>> chat = init_context(context)
 >>> df_qa = generate_answers(df_wit_questions, 'column_with_answers', 'column_with_questions, 'type_column', chat)
 
+Cleaning up the dataset
+************
+
+After generating the question & answer dataset, it is obvious that it has some range for improvement, as the chat model can return some formatting problems. In our case,
+the model incorporates some suggestions in square brackets. We check this with
+
+>>> for i in range(len(df_qa.index)):
+     if re.search(r"\[",df_qa['answers_ft'].iloc[i]) != None:
+      print(df_qa['answers_ft'].iloc[i])
+>>> #prints answers with square brackets
+
+To counteract this, we call the :py:func:`data_gen.clean_df` function. The function expects multiple parameters:
+A parameter describing the dataframe to be cleaned, `df`.
+Further, the column where the rows are located is expected by the `row` parameter. 
+A parameter containing the `prompt`, eg. `"To clean up generated texts, please replace the text within square brackets"`.
+This can be referred to as the cleanup context.
+Finally, a `pattern` to look for, which sends a signal to postprocess a row.
+
+>>> cleanup_context = "To clean up generated texts, please replace the text within square brackets"
+>>> column = 'answers_ft'
+>>> df_clean = clean_df(df, column, cleanup_context, r"\["
+
+.. autofunction:: data_gen.clean_df(df, row, prompt, pattern)
+
 .. _Dataset Annotation
 Dataset Annotation
 ------------
