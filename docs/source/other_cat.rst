@@ -87,6 +87,8 @@ For example:
 >>> chat = init_context(context)
 >>> df_qa = generate_answers(df_wit_questions, 'column_with_answers', 'column_with_questions, 'type_column', chat)
 
+.. autofunction:: data_gen.reset_context()
+
 Cleaning up the dataset
 ************
 
@@ -138,6 +140,8 @@ After doing this to our whole dataframe, we can pass it to the :py:func:`annotat
 Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer is to be extracted.
 
 .. autofunction:: data_gen.annotate_ds
+
+.. autofunction:: data_gen.find_index_iter
 
 Expand annotated answers
 ***********
