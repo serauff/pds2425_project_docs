@@ -201,6 +201,86 @@ def clean_df(df: pd.DataFrame, row: str, prompt: str, pattern: str)->pd.DataFram
      df.loc[i, 'prompt_cu'] = prompt
     return df
 
+def find_index_iter(answer: str, text: str)->list:
+    """
+    Finds all starting indices of occurrences of a given answer string within a larger text.
+    :param answer: The substring to search for within the text.
+    :type answer: str
+    :param text: The larger text in which to search for the occurrences of the answer string.
+    :type text: str
+    :return: A list of starting indices where the answer string is found within the text.
+    :rtype: list
+    """
+    answer = re.escape(answer)
+    matches = re.finditer(answer, text)
+    start_indices = [match.start() for match in matches]
+  return start_indices
+
+def annotate_ds(df: pd.DataFrame, answer_row: str, context_row: str, special_handling_row: str)->pd.DataFrame:
+    """
+    Annotates a DataFrame with answer texts and their corresponding start indices within a given context.
+    :param df: The input DataFrame containing rows to annotate.
+    :type df: pandas.DataFrame
+    :param answer_row: The name of the column in the DataFrame containing a list of answers for each row.
+    :type answer_row: str
+    :param context_row: The name of the column in the DataFrame containing the context (text) in which to search for answers.
+    :type context_row: str
+    :param special_handling_row: The name of the column in the DataFrame specifying special handling instructions (e.g., specific indices to use).
+    :type special_handling_row: str
+    :return: A pandas DataFrame with a new column `answers`, where each row contains a list of dictionaries with:
+         - 'text': A list of answer texts found in the context.
+         - 'answer_start': A list of starting indices for each answer in the context.
+    :rtype: pandas.DataFrame
+    """
+    df['answers'] = ''
+    answer_start = []
+    text = []
+      for i in range(len(df.index)):
+        answer_list = df[answer_row].iloc[i]
+        context = df[context_row].iloc[i]
+            for answer in answer_list:
+              indices = find_index_iter(answer, context)
+              if len(df['special_handling'].iloc[i])>0:
+                text.append(answer)
+                for num in df['special_handling'].iloc[i]:
+                  answer_start.append(indices[num])
+              else:
+                for index in indices:
+                  text.append(answer)
+                  answer_start.append(index)
+       df.loc[i, 'answers'] = [{'text': text, 'answer_start': answer_start}]
+       answer_start = []
+       text = []
+    return df
+
+def expand_answers(df, answer_col):
+    """
+    Expands rows of a DataFrame where the answer column contains a stringified list of dictionaries.
+    Converts the string into a list, then expands the dictionary within it.
+    Parameters:
+    - df: pandas DataFrame
+    - answer_col: str, the column name containing the answer data
+    Returns:
+    - Expanded DataFrame.
+    """
+    expanded_rows = []
+
+    for _, row in df.iterrows():
+        # Parse the string into a list
+        answers = ast.literal_eval(row[answer_col])  # Convert string to list of dictionaries
+
+        # Extract the dictionary from the list
+        answer_dict = answers[0]  # Since the list contains one dictionary
+
+        # Expand each answer
+        for text, start in zip(answer_dict['text'], answer_dict['answer_start']):
+            new_row = row.copy()
+            new_row[answer_col] = {"text": [text], "answer_start": [start]}
+            expanded_rows.append(new_row)
+
+    return pd.DataFrame(expanded_rows)
+
+
 def rank_answers(df):
     """
     Ranks answers based on their scores for each row in a DataFrame and adds the ranked answers and scores as new columns.
