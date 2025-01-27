@@ -32,6 +32,38 @@ def generate_data(path_list):
 #path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json','/content/sample_data/questionnaire3.json',
 #             '/content/sample_data/questionnaire4.json','/content/sample_data/questionnaire5.json']
 
+def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]:
+    """
+    Generates a response to a given chat message, enforcing rate limits based on the user's subscription tier.
+
+    :param chat_msg: The message to be sent to the chat interface.
+    :type chat_msg: str
+    :param chat: An object representing the chat interface. It must have a `send_message` method that accepts a string input and returns a response iterable.
+    :type chat: object
+    :param tier: The subscription tier of the user. Accepted values are 'paid' or any other tier indicating a free account.
+    :type tier: str
+    :return: A tuple containing:
+         - The original chat message (`chat_msg`).
+         - The response text from the chat interface.
+    :rtype: tuple[str, str]
+    """
+    global req_count
+    req_count += 1
+    if(tier == 'paid'):
+      if req_count >= 1500: #max requests per minute are 15, we use 10 to leave some headspace
+        print("Waiting for 60 seconds...")
+        time.sleep(60)
+        req_count = 0
+    else:
+      if req_count >= 10: #max requests per minute are 15, we use 10 to leave some headspace
+        print("Waiting for 60 seconds...")
+        time.sleep(60)
+        req_count = 0
+    chat_rsp = chat.send_message(f"{chat_msg}")
+    for chunk in chat_rsp:
+        response = chunk.text
+    return chat_msg, response
+
 def rank_answers(df):
     """
     Ranks answers based on their scores for each row in a DataFrame and adds the ranked answers and scores as new columns.
