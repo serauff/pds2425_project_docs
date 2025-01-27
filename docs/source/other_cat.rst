@@ -94,8 +94,8 @@ After generating the question & answer dataset, it is obvious that it has some r
 the model incorporates some suggestions in square brackets. We check this with
 
 >>> for i in range(len(df_qa.index)):
-     if re.search(r"\[",df_qa['answers_ft'].iloc[i]) != None:
-      print(df_qa['answers_ft'].iloc[i])
+>>>      if re.search(r"\[",df_qa['answers_ft'].iloc[i]) != None:
+>>>           print(df_qa['answers_ft'].iloc[i])
 >>> #prints answers with square brackets
 
 To counteract this, we call the :py:func:`data_gen.clean_df` function. The function expects multiple parameters:
@@ -114,6 +114,31 @@ Finally, a `pattern` to look for, which sends a signal to postprocess a row.
 .. _Dataset Annotation
 Dataset Annotation
 ------------
+
+To use the Dataset for fine-tuning, we need to annotate the data. This requires a column containing a dict of {answers:['answer'], answer_start[int]}
+While this inevitably means that we have to go through each row by hand to decide in which context an answer is to be deemed an answer, we can at least use a function
+to only use one to two lines of code per row.
+
+To prepare a dataset for annotating with the :py:func:`annotate_ds` function, we create two new columns, 'an_answers' for the annotated answer strings and 'special_handling' with integer lists in order to select specific occurences of a string.
+
+>>> annotate_df['an_answers'] = ''
+>>> annotate_df['special_handling'] = ''
+
+Now, for annotating, we read each paragraph and answer and annotate selectively, for example:
+
+>>> annotate_df.loc[5,'an_answers'] = [['R&D']]
+>>> annotate_df.loc[5,'special_handling'] = [[0],[2]]
+
+The above example annotates `'R&D'` as the answer to our question and selects the first and third occurence as the starting strings.
+
+After doing this to our whole dataframe, we can pass it to the :py:func:`annotate_ds` function
+
+>>> annotate_df = annotate_ds(annotate_df, 'an_answers', 'context', 'special_handling')
+
+Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer is to be extracted.
+
+.. autofunc::data_gen.annotate_ds(df, answer_row, context_row, special_handling_row)
+
 .. _other_cat:
 This is a new row in the general cats
 
