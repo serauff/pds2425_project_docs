@@ -77,3 +77,40 @@ def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]
     for chunk in chat_rsp:
         response = chunk.text
     return chat_msg, response
+
+def generate_q_dataset(question_row: str, chat: object)->pd.DataFrame:
+    """
+    Generates a question-answer dataset by processing a DataFrame and generating natural language questions for each row.
+
+    :param question_row: The name of the column in the DataFrame that contains question topics.
+    :type question_row: str
+    :param chat: An object representing the chat interface. It must have a `send_message` method to generate questions based on provided topics.
+    :type chat: object
+    :return: A pandas DataFrame with the following modifications:
+         - A new column, 'question_ft', containing the generated or processed questions for each row.
+         - A new column, 'prompts_q', containing the instruction prompts used for generating the questions.
+    :rtype: pandas.DataFrame
+    """
+    df_qa = generate_data(path_list)
+    df_qa.reset_index(drop=True, inplace=True) #drop the index of the questionnaires
+    max_len = len(df_qa.index)
+    i = 0
+    while i < max_len:
+        question = df_qa[question_row].iloc[i]
+        instruction_q = f"""\nThe followoing is the question topic for generation: {question};
+        To generate the question, write a natural question regarding '{question}'. \n
+        Keep a human tone to simulate the situation of a questionnaire. Output the question as plain text.
+        If the question already is a coherent sentence, return it with no modifications. Be extra careful
+        not to alter the semantic meaning of answers in the slightest and try to keep the wording as is.
+        Examples: Question topic: 'What kind of follow up is planned' Generated Question: 'What kind of follow up is planned?'
+        Question topic: 'What is the size of your business unit' Generated Question: 'What is the size of your business unit?'"""
+        question_str, response = generate_with_msg(f"{instruction_q.format(question=question)}", chat) #generate response
+        while i + 1 < len(df_qa.index) and df_qa[question_row].iloc[i+1]==df_qa[question_row].iloc[i]: #only generate a single question for multiple options
+          df_qa.loc[i, 'question_ft'] = response
+          df_qa.loc[i, 'prompts_q'] = question_str
+          i+=1
+        df_qa.loc[i, 'prompts_q'] = question_str
+        df_qa.loc[i, 'question_ft'] = response
+        print(response)
+        i+=1
+    return df_qa
