@@ -1,0 +1,47 @@
+"""
+Lumache - Python library for cooks and food lovers.
+"""
+
+__version__ = "0.1.0"
+
+def generate_data(path_list):
+    """
+    Generates a single pandas DataFrame by processing a list of JSON files containing questionnaire data.
+
+    :param path_list: A list of file paths to JSON files. Each JSON file is expected to contain a structure 
+                  with an 'options' key for nested data and 'question' and 'type' keys for metadata.
+    :type path_list: list of str
+    :return: A pandas DataFrame with the following columns:
+         - Columns from the 'options' key in the JSON data.
+         - 'question': The question associated with each option.
+         - 'type': The type of question.
+         - 'questionnaire': An identifier for the questionnaire, incremented for each JSON file in the input list.
+    :rtype: pandas.DataFrame
+    """
+    df_list = []
+    i=1
+    for path in path_list:
+        with open(path, 'r') as f:
+            data = json.load(f)
+        df = pd.json_normalize(data, record_path='options', meta=['question', 'type'])
+        df['questionnaire'] = i
+        i+=1
+        df_list.append(df)  # Append the DataFrame to the list
+    dfq1 = pd.concat(df_list, axis=0)  # Concatenate all DataFrames in the list
+    return dfq1
+
+def init_context(context: str) -> object:
+    """
+    Initialises a new chat window with the desired context.
+    
+    :param context: the context the chat history should be filled with.
+    :type context: str
+    :return: A chat object from the chat interface
+    :rtype: object
+    """
+    chat = model.start_chat(
+      history=[
+        {"role": "user", "parts": f"{context}"} #the chat history is filled with a user msg.
+      ]
+     )
+    return chat
