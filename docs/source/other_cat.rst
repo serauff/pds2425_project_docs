@@ -43,7 +43,7 @@ Initialise the chat window
 
 To initialise the chat window the function :py:func:`data_gen.init_context` can be used. 
 
-
+.. autofunction:: data_test.init_context
 
 For example:
 
