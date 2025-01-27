@@ -73,7 +73,7 @@ Generating Question&Answer Dataset
 
 After generating full-text questions, we can use the :py:func:`data_gen.generate_answers` function for generating the full question & answer dataset. 
 
-
+.. autofunction:: data_gen.generate_answers
 
 The ``df_qa`` parameter should be a dataframe containing a column ``answer_row`` with answers options to given questions from a ``question_row``, as well as a ``type_row`` 
 which indicates different handling (such as answers with multiple answer options, single answer options or answers with special characters).
@@ -109,7 +109,7 @@ Finally, a `pattern` to look for, which sends a signal to postprocess a row.
 >>> column = 'answers_ft'
 >>> df_clean = clean_df(df, column, cleanup_context, r"\["
 
-
+.. autofunction:: data_gen.clean_df
 
 .. _Dataset Annotation
 Dataset Annotation
@@ -137,7 +137,7 @@ After doing this to our whole dataframe, we can pass it to the :py:func:`annotat
 
 Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer is to be extracted.
 
-
+.. autofunction:: data_gen.annotate_ds
 
 Expand annotated answers
 ***********
@@ -153,7 +153,7 @@ For example:
 
 >>> df_expand = expand_answers(df, 'answers')
 
-
+.. autofunction:: data_gen.expand_answers
 
 We now have a dict in the 'answers' column in the format of {answers:['answer'], answer_start[int]}, ready for fine-tuning. 
 Disclaimer: This format is inspired by the SQUAD dataset.
