@@ -78,7 +78,7 @@ def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]
         response = chunk.text
     return chat_msg, response
 
-def generate_q_dataset(question_row: str, chat: object)->pd.DataFrame:
+def generate_q_dataset(question_row: str, chat: object):
     """
     Generates a question-answer dataset by processing a DataFrame and generating natural language questions for each row.
 
