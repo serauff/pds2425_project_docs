@@ -52,3 +52,19 @@ def generate_data(path_list):
         df_list.append(df)  # Append the DataFrame to the list
     dfq1 = pd.concat(df_list, axis=0)  # Concatenate all DataFrames in the list
     return dfq1
+
+def init_context(context: str) -> object:
+    """
+    Initialises a new chat window with the desired context.
+    
+    :param context: the context the chat history should be filled with.
+    :type context: str
+    :return: A chat object from the chat interface
+    :rtype: object
+    """
+    chat = model.start_chat(
+      history=[
+        {"role": "user", "parts": f"{context}"} #the chat history is filled with a user msg.
+      ]
+     )
+    return chat
