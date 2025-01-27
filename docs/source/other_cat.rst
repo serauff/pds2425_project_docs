@@ -19,6 +19,21 @@ For example:
 .. _Prompting Gemini via API:
 Prompting Gemini via API
 ------------
+
+To prompt the gemini api effectively, we construct a function to generate content in a chat window by employing the function :py:func:`data_gen.generate_with_msg`
+
+.. autofunction:: data_gen.generate_with_msg(chat_msg,chat,tier)
+
+The ``chat_msg`` parameter should be a string, containing the instructions for the model.
+The ``chat`` parameter is a chat dictionary, containing the context in which content is to be generated.
+The ``tier`` parameter is for the user to select. If the parameter is set to ``"paid"``, the function will send up to 1.500 API requests before waiting for 60 seconds.
+Else, the function will halt for 60 seconds after 10 requests.
+
+For example:
+>>> import time
+>>> generate_with_msg("Generate a answer to the question x", chat, "paid")
+>>> tuple["Generate a answer to question x", "Answer to question x"]
+
 .. _Generating Question Datset:
 Generating Question Dataset
 ------------
