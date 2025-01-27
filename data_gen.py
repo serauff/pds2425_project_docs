@@ -32,6 +32,22 @@ def generate_data(path_list):
 #path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json','/content/sample_data/questionnaire3.json',
 #             '/content/sample_data/questionnaire4.json','/content/sample_data/questionnaire5.json']
 
+def init_context(context: str) -> object:
+    """
+    Initialises a new chat window with the desired context.
+    
+    :param context: the context the chat history should be filled with.
+    :type context: str
+    :return: A chat object from the chat interface
+    :rtype: object
+    """
+    chat = model.start_chat(
+      history=[
+        {"role": "user", "parts": f"{context}"} #the chat history is filled with a user msg.
+      ]
+     )
+    return chat
+
 def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]:
     """
     Generates a response to a given chat message, enforcing rate limits based on the user's subscription tier.
