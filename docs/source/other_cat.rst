@@ -11,8 +11,10 @@ To read the json files, use the ``data_gen.generate_data(path_list)`` function a
 The ``path_list`` parameter should be a list of strings.
 
 For example:
->>>path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json',...]
->>>df = generate_data(path_list)
+
+>>> path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json',...]
+>>> generate_data(path_list)
+>>> returns dataframe with ['id','option','question','type','questionnaire']
 
 .. _Prompting Gemini via API:
 Prompting Gemini via API
