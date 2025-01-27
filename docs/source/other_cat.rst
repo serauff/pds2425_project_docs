@@ -25,7 +25,7 @@ Generate with message
 
 To prompt the gemini api effectively, we construct a function to generate content in a chat window by employing the function :py:func:`data_gen.generate_with_msg`
 
-
+.. autofunction:: data_gen.generate_with_msg
 
 The ``chat_msg`` parameter should be a string, containing the instructions for the model.
 The ``chat`` parameter is a chat dictionary, containing the context in which content is to be generated.
