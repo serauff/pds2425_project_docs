@@ -58,16 +58,12 @@ def reset_context()->object:
     chat = model.start_chat()
     return chat
 
-def generate_q_dataset(answer_row: str, question_row: str, type_row: str, chat: object)->pd.DataFrame:
+def generate_q_dataset(question_row: str, chat: object)->pd.DataFrame:
     """
     Generates a question-answer dataset by processing a DataFrame and generating natural language questions for each row.
 
-    :param answer_row: The name of the column in the DataFrame that contains answers.
-    :type answer_row: str
     :param question_row: The name of the column in the DataFrame that contains question topics.
     :type question_row: str
-    :param type_row: The name of the column in the DataFrame that specifies the type of question (e.g., MULTI_SELECT).
-    :type type_row: str
     :param chat: An object representing the chat interface. It must have a `send_message` method to generate questions based on provided topics.
     :type chat: object
     :return: A pandas DataFrame with the following modifications:
