@@ -137,7 +137,7 @@ After doing this to our whole dataframe, we can pass it to the :py:func:`annotat
 
 Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer is to be extracted.
 
-.. autofunc::data_gen.annotate_ds
+.. autofunction:: data_gen.annotate_ds
 
 Expand annotated answers
 ***********
@@ -153,7 +153,7 @@ For example:
 
 >>> df_expand = expand_answers(df, 'answers')
 
-.. autofunction::data_gen.expand_answers
+.. autofunction:: data_gen.expand_answers
 
 We now have a dict in the 'answers' column in the format of {answers:['answer'], answer_start[int]}, ready for fine-tuning. 
 Disclaimer: This format is inspired by the SQUAD dataset.
@@ -163,7 +163,7 @@ This is a new row in the general cats
 
 To rank the answers by the score of the different models, you call the ``rank_answers(df: pd.DataFrame)->pd.DataFrame`` function.
 
-.. autofunction::rank_answers
+.. autofunction:: data_gen.rank_answers
 The ``kind`` parameter should be a ``"pandas.DataFrame``. :py:func:`rank_answers(df: pd.DataFrame)->pd.DataFrame` will rank the answers according to the best performers.
 
 .. code-block:: console
