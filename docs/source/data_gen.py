@@ -204,6 +204,7 @@ def clean_df(df: object, row: str, prompt: str, pattern: str)->object:
 def find_index_iter(answer: str, text: str)->list:
     """
     Finds all starting indices of occurrences of a given answer string within a larger text.
+    
     :param answer: The substring to search for within the text.
     :type answer: str
     :param text: The larger text in which to search for the occurrences of the answer string.
@@ -219,6 +220,7 @@ def find_index_iter(answer: str, text: str)->list:
 def annotate_ds(df: object, answer_row: str, context_row: str, special_handling_row: str)->object:
     """
     Annotates a DataFrame with answer texts and their corresponding start indices within a given context.
+    
     :param df: The input DataFrame containing rows to annotate.
     :type df: pandas.DataFrame
     :param answer_row: The name of the column in the DataFrame containing a list of answers for each row.
@@ -257,11 +259,14 @@ def expand_answers(df, answer_col):
     """
     Expands rows of a DataFrame where the answer column contains a stringified list of dictionaries.
     Converts the string into a list, then expands the dictionary within it.
-    Parameters:
-    - df: pandas DataFrame
-    - answer_col: str, the column name containing the answer data
-    Returns:
-    - Expanded DataFrame.
+    
+    
+    :param df: A dataframe containing annotated rows with multiple answers for postprocessing
+    :type df: pandas.DataFrame
+    :param answer_col: the column name containing the answer data
+    :type answer_col: str
+    :return: Expanded dataframe, each row has only one single individual answer to a given question
+    :rtype: pandas.DataFrame
     """
     expanded_rows = []
 
