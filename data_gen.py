@@ -48,6 +48,103 @@ def init_context(context: str) -> object:
      )
     return chat
 
+def reset_context()->object:
+    """
+    Simply resets the context of the previous chat by calling a new, clear chat.
+
+    :return: A chat object from the chat interface
+    :rtype: object
+    """
+    chat = model.start_chat()
+    return chat
+
+def generate_q_dataset(answer_row: str, question_row: str, type_row: str, chat: object)->pd.DataFrame:
+    """
+    Generates a question-answer dataset by processing a DataFrame and generating natural language questions for each row.
+
+    :param answer_row: The name of the column in the DataFrame that contains answers.
+    :type answer_row: str
+    :param question_row: The name of the column in the DataFrame that contains question topics.
+    :type question_row: str
+    :param type_row: The name of the column in the DataFrame that specifies the type of question (e.g., MULTI_SELECT).
+    :type type_row: str
+    :param chat: An object representing the chat interface. It must have a `send_message` method to generate questions based on provided topics.
+    :type chat: object
+    :return: A pandas DataFrame with the following modifications:
+         - A new column, 'question_ft', containing the generated or processed questions for each row.
+         - A new column, 'prompts_q', containing the instruction prompts used for generating the questions.
+    :rtype: pandas.DataFrame
+    """
+    df_qa = generate_data(path_list)
+    df_qa.reset_index(drop=True, inplace=True) #drop the index of the questionnaires
+    max_len = len(df_qa.index)
+    i = 0
+    while i < max_len:
+        question = df_qa[question_row].iloc[i]
+        instruction_q = f"""\nThe followoing is the question topic for generation: {question};
+        To generate the question, write a natural question regarding '{question}'. \n
+        Keep a human tone to simulate the situation of a questionnaire. Output the question as plain text.
+        If the question already is a coherent sentence, return it with no modifications. Be extra careful
+        not to alter the semantic meaning of answers in the slightest and try to keep the wording as is.
+        Examples: Question topic: 'What kind of follow up is planned' Generated Question: 'What kind of follow up is planned?'
+        Question topic: 'What is the size of your business unit' Generated Question: 'What is the size of your business unit?'"""
+        question_str, response = generate_with_msg(f"{instruction_q.format(question=question)}", chat) #generate response
+        while i + 1 < len(df_qa.index) and df_qa[question_row].iloc[i+1]==df_qa[question_row].iloc[i]: #only generate a single question for multiple options
+          df_qa.loc[i, 'question_ft'] = response
+          df_qa.loc[i, 'prompts_q'] = question_str
+          i+=1
+        df_qa.loc[i, 'prompts_q'] = question_str
+        df_qa.loc[i, 'question_ft'] = response
+        print(response)
+        i+=1
+    return df_qa
+
+def generate_answers(df_qa: pd.DataFrame, answer_row: str, question_row: str, type_row: str, chat: object, plan: str)->pd.DataFrame:
+    """
+    Generates refined answers for a question-answer DataFrame by processing each row and interacting with a chat interface.
+
+    :param df_qa: The input DataFrame containing question-answer data to be processed.
+    :type df_qa: pandas.DataFrame
+    :param answer_row: The name of the column in the DataFrame that contains answers.
+    :type answer_row: str
+    :param question_row: The name of the column in the DataFrame that contains questions.
+    :type question_row: str
+    :param type_row: The name of the column in the DataFrame that specifies the type of question (e.g., MULTI_SELECT).
+    :type type_row: str
+    :param chat: An object representing the chat interface. It must have a `send_message` method to generate responses based on prompts.
+    :type chat: object
+    :param plan: The subscription plan of the user, used to determine rate-limiting logic when interacting with the chat interface.
+    :type plan: str
+    :return: A pandas DataFrame with the following new columns:
+         - 'prompts_a': The instruction prompts used to generate refined answers.
+         - 'answers_ft': The refined answers generated for each row.
+         - 'option': The concatenated or individual answer(s) processed from the input DataFrame.
+    :rtype: pandas.DataFrame
+    """
+    max_len = len(df_qa.index)
+    i = 0
+    while i < max_len:
+        question = df_qa[question_row].iloc[i]
+        answer = df_qa[answer_row].iloc[i]
+        if df_qa[type_row].iloc[i] == 'MULTI_SELECT':
+          question = df_qa[question_row].iloc[i]
+          j = i #temp storage for i
+          while j + 1 < len(df_qa.index) and df_qa[question_row].iloc[j] == df_qa[question_row].iloc[j + 1]:
+            answer += ', ' + df_qa[answer_row].iloc[j + 1]
+            j += 1
+        else:
+          question = df_qa[question_row].iloc[i]
+          answer = df_qa[answer_row].iloc[i]
+        instruction_a = instructions.get(df_qa['type'].iloc[i]) #get corresponding instruction field
+        question_str, response = generate_with_msg(f"{instruction_a.format(question=question, answer=answer)}", chat, plan) #generate response
+        df_qa.loc[i, 'prompts_a'] = question_str
+        df_qa.loc[i, 'answers_ft'] = response
+        df_qa.loc[i, 'option'] = answer
+        i+=1
+        if i%10 == 0:
+          print("iteration ", i)
+    return df_qa
+
 def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]:
     """
     Generates a response to a given chat message, enforcing rate limits based on the user's subscription tier.
@@ -79,6 +176,34 @@ def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]
     for chunk in chat_rsp:
         response = chunk.text
     return chat_msg, response
+
+def clean_df(df: pd.DataFrame, row: str, prompt: str, pattern: str)->pd.DataFrame:
+    """
+    Cleans up specific rows in a DataFrame based on a given pattern by interacting with a chat interface for refinement.
+
+    :param df: The DataFrame to be processed.
+    :type df: pandas.DataFrame
+    :param row: The name of the column in the DataFrame to be cleaned.
+    :type row: str
+    :param prompt: The initial prompt to initialize the chat interface for context setting.
+    :type prompt: str
+    :param pattern: A regular expression pattern used to identify rows in the specified column that require cleaning.
+    :type pattern: str
+    :return: A pandas DataFrame with the following modifications:
+         - The specified column (`row`) updated with cleaned text for rows matching the pattern.
+         - A new column, 'prompt_cu', containing the prompts used for cleaning each row.
+    :rtype: pandas.DataFrame
+    """
+    chat = reset_context()
+    chat = init_context(prompt)
+    for i in range(len(df.index)):
+     if re.search(pattern,df[row].iloc[i]) == None:
+       continue
+     cleanup = df[row].iloc[i]
+     prompt, cleanup = generate_with_msg(cleanup, chat,'paid')
+     df.loc[i, row] = cleanup
+     df.loc[i, 'prompt_cu'] = prompt
+    return df
 
 def rank_answers(df):
     """
