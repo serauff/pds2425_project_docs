@@ -6,7 +6,7 @@ Initial Data Generation
 For the initial Data Generation as in reading our seed data, the project expects the questionnaires provided by snapADDY as a list of paths in with the questionnaire in .json format. 
 To read the json files, use the ``data_gen.generate_data(path_list)`` function and pass a list of paths to the questionnaires.
 
-.. autofunction:: data_gen.generate_data
+.. autofunction:: data_test.generate_data
 
 The ``path_list`` parameter should be a list of strings.
 
