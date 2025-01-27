@@ -6,7 +6,7 @@ Initial Data Generation
 For the initial Data Generation as in reading our seed data, the project expects the questionnaires provided by snapADDY as a list of paths in with the questionnaire in .json format. 
 To read the json files, use the ``data_gen.generate_data(path_list)`` function and pass a list of paths to the questionnaires.
 
-.. autofunction:: data_gen.generate_data(path_list)
+.. autofunction:: data_gen.generate_data
 
 The ``path_list`` parameter should be a list of strings.
 
@@ -25,7 +25,7 @@ Generate with message
 
 To prompt the gemini api effectively, we construct a function to generate content in a chat window by employing the function :py:func:`data_gen.generate_with_msg`
 
-.. autofunction:: data_gen.generate_with_msg(chat_msg,chat,tier)
+.. autofunction:: data_gen.generate_with_msg
 
 The ``chat_msg`` parameter should be a string, containing the instructions for the model.
 The ``chat`` parameter is a chat dictionary, containing the context in which content is to be generated.
@@ -43,7 +43,7 @@ Initialise the chat window
 
 To initialise the chat window the function :py:func:`data_gen.init_context` can be used. 
 
-.. autofunction:: data_gen.init_context(context)
+.. autofunction:: data_gen.init_context
 
 For example:
 
@@ -56,7 +56,7 @@ Generating Question Dataset
 
 To generate the questions dataset, the :py:func:`data_gen.generate_q_dataset` function can be used
 
-.. autofunction:: data_gen.generate_q_dataset(question_row, chat)
+.. autofunction:: data_gen.generate_q_dataset
 
 While the basic instruction for generating the questions is hardcoded, the questions that are handed over to :py:func:`data_gen.generate_with_msg` are retrieved from the
 dataframe column over the parameter ``question_row`` which can be a string such as ``questions``, is used to format the instruction string for each question that should be generated.
@@ -73,7 +73,7 @@ Generating Question&Answer Dataset
 
 After generating full-text questions, we can use the :py:func:`data_gen.generate_answers` function for generating the full question & answer dataset. 
 
-.. autofunction:: data_gen.generate_answers(df_qa, answer_row, question_row, type_row, chat, plan)
+.. autofunction:: data_gen.generate_answers
 
 The ``df_qa`` parameter should be a dataframe containing a column ``answer_row`` with answers options to given questions from a ``question_row``, as well as a ``type_row`` 
 which indicates different handling (such as answers with multiple answer options, single answer options or answers with special characters).
@@ -109,7 +109,7 @@ Finally, a `pattern` to look for, which sends a signal to postprocess a row.
 >>> column = 'answers_ft'
 >>> df_clean = clean_df(df, column, cleanup_context, r"\["
 
-.. autofunction:: data_gen.clean_df(df, row, prompt, pattern)
+.. autofunction:: data_gen.clean_df
 
 .. _Dataset Annotation
 Dataset Annotation
@@ -137,7 +137,7 @@ After doing this to our whole dataframe, we can pass it to the :py:func:`annotat
 
 Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer is to be extracted.
 
-.. autofunc::data_gen.annotate_ds(df, answer_row, context_row, special_handling_row)
+.. autofunc::data_gen.annotate_ds
 
 Expand annotated answers
 ***********
@@ -153,7 +153,7 @@ For example:
 
 >>> df_expand = expand_answers(df, 'answers')
 
-.. autofunc::data_gen.expand_answers(df, answer_col)
+.. autofunction::data_gen.expand_answers
 
 We now have a dict in the 'answers' column in the format of {answers:['answer'], answer_start[int]}, ready for fine-tuning. 
 Disclaimer: This format is inspired by the SQUAD dataset.
@@ -163,7 +163,7 @@ This is a new row in the general cats
 
 To rank the answers by the score of the different models, you call the ``rank_answers(df: pd.DataFrame)->pd.DataFrame`` function.
 
-.. autofunction:: rank_answers(df: pd.DataFrame)->pd.DataFrame
+.. autofunction::rank_answers
 The ``kind`` parameter should be a ``"pandas.DataFrame``. :py:func:`rank_answers(df: pd.DataFrame)->pd.DataFrame` will rank the answers according to the best performers.
 
 .. code-block:: console
