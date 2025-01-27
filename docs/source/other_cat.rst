@@ -139,6 +139,25 @@ Keep in mind: The 'context' in a Q&A system is the paragraph from which a answer
 
 .. autofunc::data_gen.annotate_ds(df, answer_row, context_row, special_handling_row)
 
+Expand annotated answers
+***********
+
+For model fine-tuning purposes, models from huggingface.co expect the training data as ['context','question','answers'], 
+with the 'answers' consisting of a SINGLE answer to a given question. Thus, we have to expand our dataframe to allow for training, as we currently have
+multiple answers for a single question.
+
+For this, the py:func:`expand_answers` function steps into play, expecting a dataframe and a answer column in the format mentioned above.
+Then, the function returns a dataframe where each row which had multiple answers for a single question gets duplicated and receives it's individual, single answer.
+
+For example:
+
+>>> df_expand = expand_answers(df, 'answers')
+
+.. autofunc::data_gen.expand_answers(df, answer_col)
+
+We now have a dict in the 'answers' column in the format of {answers:['answer'], answer_start[int]}, ready for fine-tuning. 
+Disclaimer: This format is inspired by the SQUAD dataset.
+
 .. _other_cat:
 This is a new row in the general cats
 
