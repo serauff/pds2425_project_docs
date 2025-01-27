@@ -97,13 +97,7 @@ def generate_q_dataset(question_row: str, chat: object)->pd.DataFrame:
     i = 0
     while i < max_len:
         question = df_qa[question_row].iloc[i]
-        instruction_q = f"""\nThe followoing is the question topic for generation: {question};
-        To generate the question, write a natural question regarding '{question}'. \n
-        Keep a human tone to simulate the situation of a questionnaire. Output the question as plain text.
-        If the question already is a coherent sentence, return it with no modifications. Be extra careful
-        not to alter the semantic meaning of answers in the slightest and try to keep the wording as is.
-        Examples: Question topic: 'What kind of follow up is planned' Generated Question: 'What kind of follow up is planned?'
-        Question topic: 'What is the size of your business unit' Generated Question: 'What is the size of your business unit?'"""
+        instruction_q = f"\nThe followoing is the question topic for generation: {question};To generate the question, write a natural question regarding '{question}'. \nKeep a human tone to simulate the situation of a questionnaire. Output the question as plain text.If the question already is a coherent sentence, return it with no modifications. Be extra carefulnot to alter the semantic meaning of answers in the slightest and try to keep the wording as is. Examples: Question topic: 'What kind of follow up is planned' Generated Question: 'What kind of follow up is planned?' Question topic: 'What is the size of your business unit' Generated Question: 'What is the size of your business unit?'"
         question_str, response = generate_with_msg(f"{instruction_q.format(question=question)}", chat) #generate response
         while i + 1 < len(df_qa.index) and df_qa[question_row].iloc[i+1]==df_qa[question_row].iloc[i]: #only generate a single question for multiple options
           df_qa.loc[i, 'question_ft'] = response
