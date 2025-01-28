@@ -4,7 +4,7 @@ data_gen - The module to generate data from questionnaires
 
 __version__ = "0.1.0"
 
-def generate_data(path_list) -> str:
+def generate_data(path_list):
     """
     Generates a single pandas DataFrame by processing a list of JSON files containing questionnaire data.
 
