@@ -1,5 +1,6 @@
-Getting Started
-===============
+Fine-Tuning on small Dataset
+============================
+
 To begin our fine-tuning, we start with the generated dataset from the previous :doc:other_cat section. Data is generated and expanded as
 shown in the subsection :ref:`Dataset Annotation`. Every context has a single answer to a single question. The necessary structure for fine-tuning QA models is thus provided as
 
@@ -57,8 +58,8 @@ For example with the validation set:
 
 .. _Model Training:
 
-Model Training:
----------------
+Model Training
+--------------
 
 For training our two models, it is necessary to log into huggingface, which can be achieved by generating a HFTOKEN and 
 
@@ -120,6 +121,45 @@ Example use:
 
 .. autofunction:: ft_an.rank_answers
 
+.. _dataset gen:
+
+Generating the Dataset
+----------------------
+
+To provide the datset, we can now use the ``datasets`` and ``sklearn.model_selection`` library for generating a dataset that is ready to be used on `huggingface.co <huggingface.co>`_.
+
+The dataset is loaded, split into a ``train_test_split(test_size = 0.3, seed = 42, shuffle = True)``. With this, we ensure that every time we train a model, we train on the same splits.
+
+>>> from datasets import DatasetDict, load_dataset
+>>> from sklearn.model_selection import train_test_split
+>>> ds = load_dataset("csv", data_files="df_synth_r.csv")
+>>> ds_train = ds['train].train_test_split(test_size=0.3, seed=42, shuffle=True)
+>>> ds_splits = DatasetDict({
+    'train': ds_train['train'],
+    'valid': ds_train['test']
+})
+
+This leads to our ``DatasetDict``
+
+DatasetDict({
+    train: Dataset({
+        features: ['question', 'context', 'option', 'type', 'answer_length', 'answers_s3auf_mdeberta-v3-squad2-ft-busiQA-3ep', 'score_s3auf_mdeberta-v3-squad2-ft-busiQA-3ep', 'answers_s3auf/bert-finetuned-busiQA', 'score_s3auf/bert-finetuned-busiQA', 'answers_timpal0l/mdeberta-v3-base-squad2', 'score_timpal0l/mdeberta-v3-base-squad2', 'ranked_answer', 'ranked_score'],
+        num_rows: 1586
+    })
+    valid: Dataset({
+        features: ['question', 'context', 'option', 'type', 'answer_length', 'answers_s3auf_mdeberta-v3-squad2-ft-busiQA-3ep', 'score_s3auf_mdeberta-v3-squad2-ft-busiQA-3ep', 'answers_s3auf/bert-finetuned-busiQA', 'score_s3auf/bert-finetuned-busiQA', 'answers_timpal0l/mdeberta-v3-base-squad2', 'score_timpal0l/mdeberta-v3-base-squad2', 'ranked_answer', 'ranked_score'],
+        num_rows: 680
+    })
+})
+
+For offline use, we then save this dataset to the disc with 
+
+>>> ds_splits.save_to_disk('business-questionnaire-dataset')
+
+For online use, we push the dataset to the hub. It will be publicly available from 2nd of February 2025.
+
+>>> from huggingface_hub import create_repo, upload_folder, notebook_login
+>>> ds_splits.push_to_hub("s3auf/business-questionnaire-pds")
 
 .. autosummary::
    :toctree: generated
