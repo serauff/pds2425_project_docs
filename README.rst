@@ -17,6 +17,7 @@ For commiting, select 'create a branch' when committing and create a pull reques
 
 For creating a new module, create module_name.py in docs/source
 For creating a new page, create page_name.rst in docs/source
+For adding the module to the Modules list, add the name of the module to the api.rst file (note: .. autofunction:: module_name.function_name has to be called somewhere for the module to appear)
 
 quick reference to a function: "py:func:`function_module.function_name`
 
