@@ -12,6 +12,8 @@ https://docs.readthedocs.io/en/stable/tutorial/
 HOW TO USE
 ==========
 
+`Link to the documentation <https://pds2425-project-docs.readthedocs.io/en/latest/index.html>`_
+
 For commiting, select 'create a branch' when committing and create a pull request. Readthedocs will attempt to build the docs from the request. If it fails, close the pull request and read the build log from ReadTheDocs.
 Otherwise, merge pull request.
 
