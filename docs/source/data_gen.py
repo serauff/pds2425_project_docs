@@ -12,10 +12,10 @@ def generate_data(path_list) -> str:
                   with an 'options' key for nested data and 'question' and 'type' keys for metadata.
     :type path_list: list of str
     :return: A pandas DataFrame with the following columns:
-         - Columns from the 'options' key in the JSON data.
-         - 'question': The question associated with each option.
-         - 'type': The type of question.
-         - 'questionnaire': An identifier for the questionnaire, incremented for each JSON file in the input list.
+                 - Columns from the 'options' key in the JSON data.
+                 - 'question': The question associated with each option.
+                 - 'type': The type of question.
+                 - 'questionnaire': An identifier for the questionnaire, incremented for each JSON file in the input list.
     :rtype: pandas.DataFrame
     """
     df_list = []
@@ -67,8 +67,8 @@ def generate_q_dataset(question_row: str, chat: object)->object:
     :param chat: An object representing the chat interface. It must have a `send_message` method to generate questions based on provided topics.
     :type chat: object
     :return: A pandas DataFrame with the following modifications:
-         - A new column, 'question_ft', containing the generated or processed questions for each row.
-         - A new column, 'prompts_q', containing the instruction prompts used for generating the questions.
+                 - A new column, 'question_ft', containing the generated or processed questions for each row.
+                 - A new column, 'prompts_q', containing the instruction prompts used for generating the questions.
     :rtype: pandas.DataFrame
     """
     df_qa = generate_data(path_list)
@@ -112,9 +112,9 @@ def generate_answers(df_qa: object, answer_row: str, question_row: str, type_row
     :param plan: The subscription plan of the user, used to determine rate-limiting logic when interacting with the chat interface.
     :type plan: str
     :return: A pandas DataFrame with the following new columns:
-         - 'prompts_a': The instruction prompts used to generate refined answers.
-         - 'answers_ft': The refined answers generated for each row.
-         - 'option': The concatenated or individual answer(s) processed from the input DataFrame.
+                 - 'prompts_a': The instruction prompts used to generate refined answers.
+                 - 'answers_ft': The refined answers generated for each row.
+                 - 'option': The concatenated or individual answer(s) processed from the input DataFrame.
     :rtype: pandas.DataFrame
     """
     max_len = len(df_qa.index)
@@ -152,8 +152,8 @@ def generate_with_msg(chat_msg: str, chat: object, tier: str) -> tuple[str, str]
     :param tier: The subscription tier of the user. Accepted values are 'paid' or any other tier indicating a free account.
     :type tier: str
     :return: A tuple containing:
-         - The original chat message (`chat_msg`).
-         - The response text from the chat interface.
+                 - The original chat message (`chat_msg`).
+                 - The response text from the chat interface.
     :rtype: tuple[str, str]
     """
     global req_count
@@ -186,8 +186,8 @@ def clean_df(df: object, row: str, prompt: str, pattern: str)->object:
     :param pattern: A regular expression pattern used to identify rows in the specified column that require cleaning.
     :type pattern: str
     :return: A pandas DataFrame with the following modifications:
-         - The specified column (`row`) updated with cleaned text for rows matching the pattern.
-         - A new column, 'prompt_cu', containing the prompts used for cleaning each row.
+                 - The specified column (`row`) updated with cleaned text for rows matching the pattern.
+                 - A new column, 'prompt_cu', containing the prompts used for cleaning each row.
     :rtype: pandas.DataFrame
     """
     chat = reset_context()
@@ -230,8 +230,8 @@ def annotate_ds(df: object, answer_row: str, context_row: str, special_handling_
     :param special_handling_row: The name of the column in the DataFrame specifying special handling instructions (e.g., specific indices to use).
     :type special_handling_row: str
     :return: A pandas DataFrame with a new column `answers`, where each row contains a list of dictionaries with:
-         - 'text': A list of answer texts found in the context.
-         - 'answer_start': A list of starting indices for each answer in the context.
+                 - 'text': A list of answer texts found in the context.
+                 - 'answer_start': A list of starting indices for each answer in the context.
     :rtype: pandas.DataFrame
     """
     df['answers'] = ''
@@ -293,8 +293,8 @@ def rank_answers(df):
     :param df: A pandas DataFrame containing columns for scores and answers. The score columns should have names containing the substring 'score_', and the answer columns should have names containing the substring 'answers_'.
     :type df: pandas.DataFrame
     :return: A modified DataFrame with two new columns:
-         - 'ranked_answer': The answer corresponding to the highest score for each row.
-         - 'ranked_score': The highest score for each row.
+                 - 'ranked_answer': The answer corresponding to the highest score for each row.
+                 - 'ranked_score': The highest score for each row.
     :rtype: pandas.DataFrame
     """
     # Identify columns containing scores and answers
