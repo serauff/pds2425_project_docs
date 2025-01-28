@@ -160,19 +160,7 @@ For example:
 .. autofunction:: data_gen.expand_answers
 
 We now have a dict in the 'answers' column in the format of {answers:['answer'], answer_start[int]}, ready for fine-tuning. 
-Disclaimer: This format is inspired by the SQUAD dataset.
-
-.. _other_cat:
-This is a new row in the general cats
-
-To rank the answers by the score of the different models, you call the ``rank_answers(df: pd.DataFrame)->pd.DataFrame`` function.
-
-
-The ``kind`` parameter should be a ``"pandas.DataFrame``. :py:func:`rank_answers(df: pd.DataFrame)->pd.DataFrame` will rank the answers according to the best performers.
-
-.. code-block:: console
-
-   (.venv) $ pip install lumache
+Disclaimer: This format is inspired by the `SQUAD dataset <https://rajpurkar.github.io/SQuAD-explorer/>`_.
 
 .. autosummary::
    :toctree: generated
