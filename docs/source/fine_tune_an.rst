@@ -90,50 +90,36 @@ The Annotator
 
 Following the concept of this project, we aim to automatically annotate a generated Dataset for later fine-tuning purposes. This is, because manual annotation of answers requires intensive work. We try to accomplish good results with using multiple models to extract answers from a QA-Set and then annotating the QA-Set with an answer as well as the answer start index.
 
+For this, a function is created to programmatically call a model and append the answer and confidence scores of the model for the extraction. After this, a postprocessing function is used to rank the extracted answers according to the models confidence estimation. Thus, the highest confidence score is selected as the annotated answer.
 
+.. autofunction:: ft_an.annotator
 
-Usage
-=====
+The py:func:`ft_an.annotator` is used to accept a DataFrame containing questions and contexts. It also expects a model_checkpoint for calling ``pipeline("question-answering, model = model_checkpoint)``. It then appends the score of the model in the column ``"score_" + model_checkpoint`` and the answer dict in the column ``"answers_" + model_checkpoint``.
 
-.. _installation:
+For using this function, we pass our dataset that needs to be annotated multiple times.
 
-Installation
-------------
+Models used to annotate the dataset:
+-`s3auf/mdeberta-v3-squad2-ft-busiQA-3ep <https://huggingface.co/s3auf/mdeberta-v3-squad2-ft-busiQA-3ep>`_ (base fine-tuned on squadv2, then on our initial dataset)
+-`timpal0l/mdeberta-v3-base-squad2 <https://huggingface.co/timpal0l/mdeberta-v3-base-squad2>`_ (base fine-tuned on squadv2)
+-`s3auf/bert-finetuned-busiQA <https://huggingface.co/s3auf/bert-finetuned-busiQA>`_ (base bert fine-tuned on our initial dataset)
 
-To use Lumache, first install it using pip:
+.. _ranker:
 
-.. code-block:: console
+The Ranker
+----------
 
-   (.venv) $ pip install lumache
+In order to get the best possible answers we leverage the py:func:`ft_an.rank_answers` function to select the best annotations of the dataset.
+The function scans a provided dataframe for score and answer columns by checking if they include the strings (eg. "score_" from the previous py:func:`ft_an.annotator` function.
+Following, it iterates through the score and answer columns and selects the best element from each row. This is then appended to a list of best answers. It also preserves the confidence score each model had.
 
-Creating recipes
-----------------
+Example use:
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+>>> df_an = annotator(pd.read_csv(dataset), "s3auf/mdeberta-v3-squad2-ft-busiQA-3ep")
+>>> df_an = annotator(df_an, "s3auf/bert-finetuned-busiQA")
+>>> df_ranked = rank_answers(df_an)
 
-.. autofunction:: data_test.get_random_ingredients
+.. autofunction:: ft_an.rank_answers
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
-
-.. autoexception:: data_test.InvalidKindError
-
-For example:
-
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
-
-Ranking answers
----------------
-To retrieve a list of random ingredients,
-you can use the ``data_gen.rank_answers(df)`` function:
-
-.. autofunction:: data_gen.rank_answers
 
 .. autosummary::
    :toctree: generated
-
-   lumache
