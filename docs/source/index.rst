@@ -10,7 +10,7 @@ and offers a *simple* and *intuitive* API.
 
 Check out the :doc:`usage` section for further information, including
 how to :ref:`installation` the project.
-also, check out the :doc:`other_cat` section
+also, check out the :doc:`data_generation` section
 .. note::
 
    This project is under active development.
@@ -22,5 +22,5 @@ Contents
 
    usage
    api
-   other_cat
+   data_generation
    fine_tune_an
