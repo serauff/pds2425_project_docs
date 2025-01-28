@@ -7,3 +7,28 @@ with some basic Sphinx docs.
 Read the tutorial here:
 
 https://docs.readthedocs.io/en/stable/tutorial/
+
+
+HOW TO USE
+==========
+
+For commiting, select 'create a branch' when committing and create a pull request. Readthedocs will attempt to build the docs from the request. If it fails, close the pull request and read the build log from ReadTheDocs
+
+
+For creating a new module, create module_name.py in docs/source
+For creating a new page, create page_name.rst in docs/source
+
+quick reference to a function: "py:func:`function_module.function_name`
+
+posting the function documentation to a rst document: ".. autofunction:: function_module.function_name"
+
+reference to a document: ":doc:`doc_name`"
+
+reference to a section within a doc ":ref:`ref_name`"
+
+generate a reference label within a doc ".. _Reference Label"
+
+generate a Heading -> "=" below the heading according to the heading length
+
+generate a subheading -> "-" below the subheading accoring to the subheading length
+
