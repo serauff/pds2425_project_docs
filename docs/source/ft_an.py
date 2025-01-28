@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 def preprocess_training_examples(examples):
     """
     Direct source of this function: https://huggingface.co/learn/nlp-course/chapter7/7#fine-tuning-the-model-with-the-trainer-api
+    
     Preprocesses training examples for a question-answering model by tokenizing the input and aligning answer positions.
 
     :param examples: A dictionary containing the following keys:
