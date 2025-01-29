@@ -1,7 +1,7 @@
 Fine-Tuning on small Dataset
 ============================
 
-To begin our fine-tuning, we start with the generated dataset from the previous :doc:other_cat . Data is generated and expanded as
+To begin our fine-tuning, we start with the generated dataset from the previous :doc:`data_generation` . Data is generated and expanded as
 shown in the subsection :ref:`Dataset Annotation`. Every context has a single answer to a single question. The necessary structure for fine-tuning QA models is thus provided as
 
 >>> [{question: 'question', context: 'context', answers: {'text':['text'], answer_start:[int]}}]
