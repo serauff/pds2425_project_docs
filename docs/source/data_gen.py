@@ -357,3 +357,19 @@ def rank_answers(df):
     df['ranked_score'] = ranked_scores
     return df
 
+def search_squares(df, row):   
+  """
+  Searches for square brackets in a specified column of a DataFrame and counts the occurrences.
+
+  :param df: The input DataFrame to be analyzed.
+  :type df: pandas.DataFrame
+  :param row: The name of the column in which to search for square brackets.
+  :type row: str
+  :return: A string message indicating the number of rows containing square brackets and requiring cleaning.
+  :rtype: str
+  """
+  j=0
+  for i in range(len(df.index)):
+    if re.search(r"\[",df[row].iloc[i]) != None:
+      j+=1
+  return f"{j} rows of our dataframe contain square brackets and thus need to be reprompted to gemnini for cleaning."
