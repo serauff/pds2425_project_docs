@@ -63,6 +63,25 @@ For example:
 >>> model = genai.GenerativeModel("gemini-1.5-flash")
 >>> chat = init_context("You are a helpful assistant in generating questionnaire data. Please provide answers to the following questions.")
 
+Instructions for Generation
+************
+
+For adapting the outputs, a ``instructions`` template is prepared, which is derived from the different question types. For example, the function :py:func:`data_gen.generate_q_dataset` scans the ``instructions`` template for a matching instruction for generation. 
+
+E.g.:
+
+>>> instructions = {
+>>> 'MULTI_SELECT': "To answer the questionnaire, write a natural, full text answer to the topic of {question}, with the answer options being:\n {answer}\n. Always incorporate at least one of the answers. Keep a human tone to simulate the situation of a questionnaire.",
+>>> 'NUMBER': "To answer the questionnaire, write an answer to the topic of {question} including a numerical, realistic number, with the answer options being:\n {answer}\n. Always incorporate at least one of the answers. Keep a human tone to simulate the situation of a questionnaire.",
+>>> 'TEXT': "The provided part of the questionnaire is about {question}, with the instruction being:\n {answer}\n. Keep a human tone to simulate the situation of a questionnaire.",
+>>> 'DATE': "The provided part of the questionnaire is about {question}, with the instruction being to provide:\n {answer}\n. Incorporate a numerical value and keep a human tone to simulate the situation of a questionnaire.",
+>>> 'SINGLE_SELECT': "To answer the questionnaire, write a natural, full text answer to the topic of {question}, with the answer options being:\n {answer}\n. Always incorporate at least one of the answers. Keep a human tone to simulate the situation of a questionnaire."
+>>> }
+
+During the generation stage, :py:func:`data_gen.generate_q_dataset` thus scans for a given instruction field in the ``"type"`` column of the dataframe that has been passed. With this, we can dynamically create different shapes of questionnaires. We leverage this effectively, to create ``short``, ``medium`` and ``long`` answers. The instructions field further uses an f-string to dynamically replace the ``{question}`` within the instruction strings.
+
+Following, this means we can use the :py:func:`data_gen.init_context` function to initialise a certain wishful setting for the Large Language Model and then can use a fitting instruction field to adapt the answers. This can help in creating a diverse answer set, containing questions that can be answered with multiple options, one single option, open questions as well as number ranges or dates.
+
 .. _Generating Question Datset:
 Generating Question Dataset
 ------------
