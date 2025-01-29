@@ -13,8 +13,21 @@ The ``path_list`` parameter should be a list of strings.
 For example:
 
 >>> path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json',...]
->>> generate_data(path_list)
+>>> df = generate_data(path_list)
 >>> returns dataframe with ['id','option','question','type','questionnaire']
+
+However, for fetching json data from alternative sources, the py:func:`data_gen.generate_data_web` function allows for passing a list of URL's to the function. The ``path_list`` parameter can be a list of ``URL's``.
+
+For example:
+
+>>> path_list = []
+>>> path = 'https://raw.githubusercontent.com/serauff/data/refs/heads/main/questionnaires/'
+>>> for i in range(1,6):
+>>>   path_list.append(path + f'questionnaire{i}.json')
+>>> df = generate_data_web(path_list)
+>>> returns dataframe with ['id','option','question','type','questionnaire']
+
+.. autofunction:: data_gen.generate_data_web
 
 .. _Prompting Gemini via API:
 Prompting Gemini via API
