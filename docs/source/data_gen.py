@@ -32,6 +32,35 @@ def generate_data(path_list):
 #path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json','/content/sample_data/questionnaire3.json',
 #             '/content/sample_data/questionnaire4.json','/content/sample_data/questionnaire5.json']
 
+def generate_data_web(path_list):
+    """
+    Generates a single pandas DataFrame by processing a list of JSON files containing questionnaire data.
+
+    :param path_list: A list of file paths to JSON files, which can be stored online. Each JSON file is expected to contain a structure 
+                  with an 'options' key for nested data and 'question' and 'type' keys for metadata.
+    :type path_list: list of str
+    :return: A pandas DataFrame with the following columns:
+                 - Columns from the 'options' key in the JSON data.
+                 - 'question': The question associated with each option.
+                 - 'type': The type of question.
+                 - 'questionnaire': An identifier for the questionnaire, incremented for each JSON file in the input list.
+    :rtype: pandas.DataFrame
+    """
+    df_list = []
+    i = 1
+    for path in path_list:
+        # Use requests to fetch data from URL
+        response = requests.get(path)
+        response.raise_for_status()  # Raise an exception for bad responses
+        data = response.json()  
+        
+        df = pd.json_normalize(data, record_path='options', meta=['question', 'type'])
+        df['questionnaire'] = i
+        i += 1
+        df_list.append(df)  
+    dfq1 = pd.concat(df_list, axis=0)  
+    return dfq1
+
 def init_context(context: str) -> object:
     """
     Initialises a new chat window with the desired context.
