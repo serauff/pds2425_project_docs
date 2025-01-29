@@ -117,7 +117,7 @@ For example:
 >>> chat = reset_context()
 >>> context = "Your role is a business representative that gets interviewed and is being asked to provide information about different topics"
 >>> chat = init_context(context)
->>> df_qa = generate_answers(df_wit_questions, 'column_with_answers', 'column_with_questions, 'type_column', chat)
+>>> df_qa = generate_answers(df_with_questions, 'column_with_answers', 'column_with_questions', 'type_column', chat)
 
 .. autofunction:: data_gen.reset_context()
 
@@ -131,6 +131,12 @@ the model incorporates some suggestions in square brackets. We check this with
 >>>      if re.search(r"\[",df_qa['answers_ft'].iloc[i]) != None:
 >>>           print(df_qa['answers_ft'].iloc[i])
 >>> #prints answers with square brackets
+
+Another option to check if corresponding rows remain is to use the :py:func:`search_squares` function. 
+
+.. autofunction:: data_gen.search_squares
+
+It expects a DataFrame and a column to search for square brackets.
 
 To counteract this, we call the :py:func:`data_gen.clean_df` function. The function expects multiple parameters:
 A parameter describing the dataframe to be cleaned, `df`.
