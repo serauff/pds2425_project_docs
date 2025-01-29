@@ -16,7 +16,7 @@ For example:
 >>> df = generate_data(path_list)
 >>> returns dataframe with ['id','option','question','type','questionnaire']
 
-However, for fetching json data from alternative sources, the py:func:`data_gen.generate_data_web` function allows for passing a list of URL's to the function. The ``path_list`` parameter can be a list of ``URL's``.
+However, for fetching json data from alternative sources, the :py:func:`data_gen.generate_data_web` function allows for passing a list of URL's to the function. The ``path_list`` parameter can be a list of ``URL's``.
 
 For example:
 
@@ -163,7 +163,7 @@ For model fine-tuning purposes, models from huggingface.co expect the training d
 with the 'answers' consisting of a SINGLE answer to a given question. Thus, we have to expand our dataframe to allow for training, as we currently have
 multiple answers for a single question.
 
-For this, the py:func:`expand_answers` function steps into play, expecting a dataframe and a answer column in the format mentioned above.
+For this, the :py:func:`expand_answers` function steps into play, expecting a dataframe and a answer column in the format mentioned above.
 Then, the function returns a dataframe where each row which had multiple answers for a single question gets duplicated and receives it's individual, single answer.
 
 For example:
