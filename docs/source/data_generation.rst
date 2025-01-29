@@ -1,6 +1,8 @@
 Data Generation
 ====
+
 .. _Initial Data Generation:
+
 Initial Data Generation
 ------------
 For the initial Data Generation as in reading our seed data, the project expects the questionnaires provided by snapADDY as a list of paths in with the questionnaire in .json format. 
@@ -14,7 +16,7 @@ For example:
 
 >>> path_list = ['/content/sample_data/questionnaire1.json','/content/sample_data/questionnaire2.json',...]
 >>> df = generate_data(path_list)
->>> returns dataframe with ['id','option','question','type','questionnaire']
+>>> #returns dataframe with {'id':[...],'option':[...],'question':[...],'type':[...],'questionnaire':[...]}
 
 However, for fetching json data from alternative sources, the :py:func:`data_gen.generate_data_web` function allows for passing a list of URL's to the function. The ``path_list`` parameter can be a list of ``URL's``.
 
@@ -25,11 +27,12 @@ For example:
 >>> for i in range(1,6):
 >>>   path_list.append(path + f'questionnaire{i}.json')
 >>> df = generate_data_web(path_list)
->>> returns dataframe with ['id','option','question','type','questionnaire']
+>>> #returns dataframe with {'id':[...],'option':[...],'question':[...],'type':[...],'questionnaire':[...]}
 
 .. autofunction:: data_gen.generate_data_web
 
 .. _Prompting Gemini via API:
+
 Prompting Gemini via API
 ------------
 
@@ -83,6 +86,7 @@ During the generation stage, :py:func:`data_gen.generate_q_dataset` thus scans f
 Following, this means we can use the :py:func:`data_gen.init_context` function to initialise a certain wishful setting for the Large Language Model and then can use a fitting instruction field to adapt the answers. This can help in creating a diverse answer set, containing questions that can be answered with multiple options, one single option, open questions as well as number ranges or dates.
 
 .. _Generating Question Datset:
+
 Generating Question Dataset
 ------------
 
@@ -100,6 +104,7 @@ For example:
 >>> questions = generate_q_dataset('question', chat)
 
 .. _Generating QA Dataset:
+
 Generating Question&Answer Dataset
 ------------
 
@@ -152,6 +157,7 @@ Finally, a `pattern` to look for, which sends a signal to postprocess a row.
 .. autofunction:: data_gen.clean_df
 
 .. _Dataset Annotation:
+
 Dataset Annotation
 ------------
 
