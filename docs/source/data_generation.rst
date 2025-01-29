@@ -99,7 +99,7 @@ For example:
 >>> chat = init_context("You are a helpful assistant in generating questionnaire data. Please provide answers to the following questions.")
 >>> questions = generate_q_dataset('question', chat)
 
-.. _Generating QA Dataset
+.. _Generating QA Dataset:
 Generating Question&Answer Dataset
 ------------
 
@@ -151,7 +151,7 @@ Finally, a `pattern` to look for, which sends a signal to postprocess a row.
 
 .. autofunction:: data_gen.clean_df
 
-.. _Dataset Annotation
+.. _Dataset Annotation:
 Dataset Annotation
 ------------
 
