@@ -12,6 +12,7 @@ def generate_data(path_list):
                   with an 'options' key for nested data and 'question' and 'type' keys for metadata.
     :type path_list: list of str
     :return: A pandas DataFrame with the following columns:
+                 
                  - Columns from the 'options' key in the JSON data.
                  - 'question': The question associated with each option.
                  - 'type': The type of question.
