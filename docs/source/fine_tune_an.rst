@@ -95,7 +95,7 @@ For this, a function is created to programmatically call a model and append the 
 
 .. autofunction:: ft_an.annotator
 
-The py:func:`ft_an.annotator` is used to accept a DataFrame containing questions and contexts. It also expects a model_checkpoint for calling ``pipeline("question-answering, model = model_checkpoint)``. It then appends the score of the model in the column ``"score_" + model_checkpoint`` and the answer dict in the column ``"answers_" + model_checkpoint``.
+The :py:func:`ft_an.annotator` is used to accept a DataFrame containing questions and contexts. It also expects a model_checkpoint for calling ``pipeline("question-answering, model = model_checkpoint)``. It then appends the score of the model in the column ``"score_" + model_checkpoint`` and the answer dict in the column ``"answers_" + model_checkpoint``.
 
 For using this function, we pass our dataset that needs to be annotated multiple times.
 
@@ -109,8 +109,8 @@ Models used to annotate the dataset:
 The Ranker
 ----------
 
-In order to get the best possible answers we leverage the py:func:`ft_an.rank_answers` function to select the best annotations of the dataset.
-The function scans a provided dataframe for score and answer columns by checking if they include the strings (eg. "score_" from the previous py:func:`ft_an.annotator` function.
+In order to get the best possible answers we leverage the :py:func:`ft_an.rank_answers` function to select the best annotations of the dataset.
+The function scans a provided dataframe for score and answer columns by checking if they include the strings (eg. "score_" from the previous :py:func:`ft_an.annotator` function.
 Following, it iterates through the score and answer columns and selects the best element from each row. This is then appended to a list of best answers. It also preserves the confidence score each model had.
 
 Example use:
