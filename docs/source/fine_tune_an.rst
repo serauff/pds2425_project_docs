@@ -119,8 +119,11 @@ The :py:func:`ft_an.annotator` is used to accept a DataFrame containing question
 For using this function, we pass our dataset that needs to be annotated multiple times.
 
 Models used to annotate the dataset:
+
 -`s3auf/mdeberta-v3-squad2-ft-busiQA-3ep <https://huggingface.co/s3auf/mdeberta-v3-squad2-ft-busiQA-3ep>`_ (base fine-tuned on squadv2, then on our initial dataset)
+
 -`timpal0l/mdeberta-v3-base-squad2 <https://huggingface.co/timpal0l/mdeberta-v3-base-squad2>`_ (base fine-tuned on squadv2)
+
 -`s3auf/bert-finetuned-busiQA <https://huggingface.co/s3auf/bert-finetuned-busiQA>`_ (base bert fine-tuned on our initial dataset)
 
 .. _ranker:
