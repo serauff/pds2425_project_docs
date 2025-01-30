@@ -137,7 +137,7 @@ the model incorporates some suggestions in square brackets. We check this with
 >>>           print(df_qa['answers_ft'].iloc[i])
 >>> #prints answers with square brackets
 
-Another option to check if corresponding rows remain is to use the :py:func:`search_squares` function. 
+Another option to check if corresponding rows remain is to use the :py:func:`data_gen.search_squares` function. 
 
 .. autofunction:: data_gen.search_squares
 
@@ -165,7 +165,7 @@ To use the Dataset for fine-tuning, we need to annotate the data. This requires 
 While this inevitably means that we have to go through each row by hand to decide in which context an answer is to be deemed an answer, we can at least use a function
 to only use one to two lines of code per row.
 
-To prepare a dataset for annotating with the :py:func:`annotate_ds` function, we create two new columns, 'an_answers' for the annotated answer strings and 'special_handling' with integer lists in order to select specific occurences of a string.
+To prepare a dataset for annotating with the :py:func:`data_gen.annotate_ds` function, we create two new columns, 'an_answers' for the annotated answer strings and 'special_handling' with integer lists in order to select specific occurences of a string.
 
 >>> annotate_df['an_answers'] = ''
 >>> annotate_df['special_handling'] = ''
@@ -177,7 +177,7 @@ Now, for annotating, we read each paragraph and answer and annotate selectively,
 
 The above example annotates `'R&D'` as the answer to our question and selects the first and third occurence as the starting strings.
 
-After doing this to our whole dataframe, we can pass it to the :py:func:`annotate_ds` function
+After doing this to our whole dataframe, we can pass it to the :py:func:`data_gen.annotate_ds` function
 
 >>> annotate_df = annotate_ds(annotate_df, 'an_answers', 'context', 'special_handling')
 
@@ -194,7 +194,7 @@ For model fine-tuning purposes, models from huggingface.co expect the training d
 with the 'answers' consisting of a SINGLE answer to a given question. Thus, we have to expand our dataframe to allow for training, as we currently have
 multiple answers for a single question.
 
-For this, the :py:func:`expand_answers` function steps into play, expecting a dataframe and a answer column in the format mentioned above.
+For this, the :py:func:`data_gen.expand_answers` function steps into play, expecting a dataframe and a answer column in the format mentioned above.
 Then, the function returns a dataframe where each row which had multiple answers for a single question gets duplicated and receives it's individual, single answer.
 
 For example:
