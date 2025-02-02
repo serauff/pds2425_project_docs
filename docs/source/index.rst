@@ -1,6 +1,8 @@
 Welcome to the pds2425 docs!
 ============================
 
+Responsible for the readthedocs documentation: Seraphin Auffinger
+
 This documentation describes the first part of the project: Generating a annotated Question and Answer Dataset
 
 Check out the :doc:`data_generation`, :doc:`api` and :doc:`fine_tune_an` section for further information.
